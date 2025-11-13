@@ -73,7 +73,7 @@ class Student:
 s = Student("Sam")
 s.display()          #  works
 # print(s.__name)    #  error
-print(s._Student__name)  # ⚠️ accessed using name mangling
+print(s._Student__name)  #  accessed using name mangling
 ```
 
 ###  What is Recursion?
