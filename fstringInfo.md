@@ -96,7 +96,7 @@ Success rate: 67.50%
 
 ### 5. Using Dictionaries and Lists
 
-We can directly reference elements from collections.
+We can use f-strings to get values from a dictionary or list.
 
 ```python
 person = {"name": "Amisha", "age": 21}
@@ -125,7 +125,7 @@ print(bio)
 
 - Clear and readable syntax  
 - Faster performance  
-- Works with functions and data structures   
+- Works with dictionaries, lists and function
 
 
 

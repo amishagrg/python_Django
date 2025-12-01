@@ -81,3 +81,14 @@ for i in range(1, noOfRows + 1):
     spaces = " " * (noOfRows - i)
     stars = "* " * i
     print(spaces + stars)
+
+
+def factorial(n):
+    if n == 0 or n == 1:
+        return 1
+    else:
+        return n * factorial(n - 1)
+    
+num = 5
+print(f"Factorial of {num} is {factorial(num)}")
+
