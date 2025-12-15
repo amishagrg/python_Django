@@ -1,0 +1,122 @@
+from src.services.student_service import StudentService
+from src.services import analytics
+
+
+def prompt_int(prompt_text: str, default: int = None) -> int:
+    while True:
+        val = input(prompt_text).strip()
+        if val == "" and default is not None:
+            return default
+        try:
+            return int(val)
+        except ValueError:
+            print("Please enter a valid integer.")
+
+
+def prompt_str(prompt_text: str, default: str = None) -> str:
+    val = input(prompt_text).strip()
+    if val == "" and default is not None:
+        return default
+    return val
+
+
+def print_student(s):
+    print(f"ID: {s.id}")
+    print(f"Name: {s.name}")
+    print(f"Age: {s.age}")
+    print(f"Gender: {s.gender}")
+    print(f"Grade: {s.grade}")
+    print("-" * 30)
+
+
+def main():
+    service = StudentService()
+
+    while True:
+        print("\n=== Student Management ===")
+        print("1. Add student")
+        print("2. List students")
+        print("3. Search student by name")
+        print("4. Update student")
+        print("5. Delete student")
+        print("6. Export backup")
+        print("7. Analytics")
+        print("8. Exit")
+
+        choice = input("Choose: ").strip()
+
+        if choice == "1":
+            name = prompt_str("Name: ")
+            age = prompt_int("Age: ")
+            gender = prompt_str("Gender: ")
+            grade = prompt_str("Grade: ")
+
+            s = service.add_student(name, age, gender, grade)
+            print("Added student:")
+            print_student(s)
+
+        elif choice == "2":
+            students = service.list_students()
+            if not students:
+                print("No students yet.")
+            for s in students:
+                print_student(s)
+
+        elif choice == "3":
+            q = prompt_str("Search name: ")
+            found = service.search_by_name(q)
+            if not found:
+                print("No students found.")
+            for s in found:
+                print_student(s)
+
+        elif choice == "4":
+            sid = prompt_str("Student ID to update: ")
+            s = service.find_by_id(sid)
+            if not s:
+                print("Student not found.")
+                continue
+
+            print("Leave blank to keep existing value.")
+
+            name = prompt_str(f"Name [{s.name}]: ", default=s.name)
+            age = prompt_int(f"Age [{s.age}]: ", default=s.age)
+            gender = prompt_str(f"Gender [{s.gender}]: ", default=s.gender)
+            grade = prompt_str(f"Grade [{s.grade}]: ", default=s.grade)
+
+            updated = service.update_student(
+                sid, name=name, age=age, gender=gender, grade=grade
+            )
+
+            print("Updated:")
+            print_student(updated)
+
+        elif choice == "5":
+            sid = prompt_str("Student ID to delete: ")
+            ok = service.delete_student(sid)
+            print("Deleted." if ok else "No such student.")
+
+        elif choice == "6":
+            service.export_backup()
+            print("Backup exported.")
+
+        elif choice == "7":
+            students = service.list_students()
+            avg = analytics.average_age(students)
+            genders = analytics.count_by_gender(students)
+
+            print(f"Average age: {avg:.2f}")
+            print("Counts by gender:")
+            for k, v in genders.items():
+                print(f"  {k}: {v}")
+
+        elif choice == "8":
+            print("Bye!")
+            break
+
+        else:
+            print("Unknown choice")
+
+
+if __name__ == "__main__":
+    main()
